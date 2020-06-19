@@ -11,7 +11,8 @@
         "require-jsdoc": "off",
         "quotes": "off",
         "object-curly-spacing": "off",
-        "linebreak-style": "off"
+        "linebreak-style": "off",
+        "operator-linebreak": "off"
     },
     "extends": [
         "eslint:recommended",

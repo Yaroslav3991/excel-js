@@ -2,7 +2,7 @@ import { $ } from "@core/dom";
 
 export class Excel {
   constructor(selector, options) {
-    this.element = document.querySelector(selector);
+    this.element = $(selector);
     this.components = options.components || [];
   }
 
@@ -13,7 +13,7 @@ export class Excel {
       const element = $.create("div", Component.className);
 
       const component = new Component(element);
-      element.innerHTML = component.toHTML();
+      element.html(component.toHTML());
 
       root.append(element);
     });
