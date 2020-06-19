@@ -1,21 +1,27 @@
 export class Excel {
   constructor(selector, options) {
-    this.el = document.querySelector(selector);
+    this.element = document.querySelector(selector);
     this.components = options.components || [];
   }
 
   getRoot() {
     const root = document.createElement("div");
+    root.classList.add("excel");
 
     this.components.forEach((Component) => {
-      const component = new Component();
-      root.insertAdjacentHTML("beforeend", component.toHTML());
+      const element = document.createElement("div");
+      element.classList.add(Component.className);
+
+      const component = new Component(element);
+      element.innerHTML = component.toHTML();
+
+      root.append(element);
     });
 
     return root;
   }
 
   render() {
-    this.el.append(this.getRoot());
+    this.element.append(this.getRoot());
   }
 }
