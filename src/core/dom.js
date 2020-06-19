@@ -12,4 +12,6 @@ $.create = (tagName, classes = "") => {
   if (classes) {
     element.classList.add(classes);
   }
+
+  return element;
 };
