@@ -1,7 +1,7 @@
 export class Excel {
   constructor(selector, options) {
     this.el = document.querySelector(selector);
-    this.components - options.components || [];
+    this.components = options.components || [];
   }
 
   getRoot() {
@@ -9,7 +9,7 @@ export class Excel {
 
     this.components.forEach((Component) => {
       const component = new Component();
-      root.insertAdjacentElement("beforeend", component.toHTML());
+      root.insertAdjacentHTML("beforeend", component.toHTML());
     });
 
     return root;
