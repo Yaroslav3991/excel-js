@@ -3,10 +3,18 @@ const CODES = {
   Z: 90,
 };
 
-function toCell(_, index) {
-  return `
-        <div class="cell" contenteditable data-col="${index}"></div>
-    `;
+function toCell(indexRow) {
+  return function(_, indexColumn) {
+    return `
+          <div 
+            class="cell" 
+            contenteditable 
+            data-col="${indexColumn}"
+            data-type="cell"
+            data-id="${indexRow}:${indexColumn}"
+          ></div>
+      `;
+  };
 }
 
 function toColumn(columnName, index) {
@@ -50,10 +58,13 @@ export function createTable(rowsCount = 40) {
 
   rows.push(createRow(null, columns));
 
-  for (let i = 0; i < rowsCount; i++) {
-    const cells = new Array(columnsCount).fill("").map(toCell).join("");
+  for (let rowNumber = 0; rowNumber < rowsCount; rowNumber++) {
+    const cells = new Array(columnsCount)
+      .fill("")
+      .map(toCell(rowNumber))
+      .join("");
 
-    rows.push(createRow(i + 1, cells));
+    rows.push(createRow(rowNumber + 1, cells));
   }
 
   return rows.join("");
