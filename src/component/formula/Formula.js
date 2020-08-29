@@ -1,5 +1,6 @@
 const { ExcelComponent } = require("../../core/ExcelComponent");
 import { $ } from "@core/dom";
+
 export class Formula extends ExcelComponent {
   static className = "excel__formula";
 
@@ -7,6 +8,7 @@ export class Formula extends ExcelComponent {
     super(root, {
       name: "Formula",
       listeners: ["input", "keydown"],
+      subscribe: ["currentText"],
       ...options,
     });
   }
@@ -26,10 +28,10 @@ export class Formula extends ExcelComponent {
     this.$on("table:select", (cell) => {
       this.formula.text(cell.text());
     });
+  }
 
-    this.$on("table:input", (cell) => {
-      this.formula.text(cell.text());
-    });
+  storeChanged({ currentText }) {
+    this.formula.text(currentText);
   }
 
   onInput(event) {
