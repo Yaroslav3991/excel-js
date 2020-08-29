@@ -96,6 +96,13 @@ class Dom {
     });
   }
 
+  getStyles(styles = []) {
+    return styles.reduce((res, s) => {
+      res[s] = this.$element.style[s];
+      return res;
+    }, {});
+  }
+
   addClass(className) {
     this.$element.classList.add(className);
     return this;

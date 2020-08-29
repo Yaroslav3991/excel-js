@@ -12,3 +12,28 @@ export function range(start, end) {
   }
   return new Array(end - start + 1).fill("").map((_, index) => start + index);
 }
+
+export function storage(key, data = null) {
+  if (!data) {
+    return JSON.parse(localStorage.getItem(key));
+  }
+  localStorage.setItem(key, JSON.stringify(data));
+}
+
+export function isEqual(oldValue, currentValue) {
+  if (typeof oldValue === "object" && typeof currentValue === "object") {
+    return JSON.stringify(oldValue) === JSON.stringify(currentValue);
+  }
+
+  return oldValue === currentValue;
+}
+
+export function camelToDashCase(str) {
+  return str.replace(/([A-Z])/g, (g) => `-${g[0].toLowerCase()}`);
+}
+
+export function toInlineStyles(styles = {}) {
+  return Object.keys(styles)
+    .map((key) => `${camelToDashCase(key)}: ${styles[key]}`)
+    .join(";");
+}

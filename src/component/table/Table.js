@@ -9,6 +9,8 @@ import {
   nextSelector,
 } from "@/component/table/table.functions";
 import { TableSelection } from "@/component/table/TableSelection";
+import * as actions from "@/redux/actions";
+import { defaultStyles } from "../../constans";
 
 export class Table extends ExcelComponent {
   static className = "excel__table";
@@ -22,7 +24,7 @@ export class Table extends ExcelComponent {
   }
 
   toHTML() {
-    return createTable();
+    return createTable(35, this.store.getState());
   }
 
   prepare() {
@@ -36,21 +38,44 @@ export class Table extends ExcelComponent {
 
     this.$on("formula:input", (text) => {
       this.selection.current.text(text);
+      this.updateTextInStore(text);
     });
 
     this.$on("formula:done", () => {
       this.selection.current.focus();
+    });
+
+    this.$on("toolbar:applyStyle", (value) => {
+      this.selection.applyStyle(value);
+      this.$dispatch(
+        actions.applyStyle({
+          value,
+          ids: this.selection.selectedIds,
+        })
+      );
     });
   }
 
   selectCell(cell) {
     this.selection.select(cell);
     this.$emit("table:select", cell);
+
+    const styles = cell.getStyles(Object.keys(defaultStyles));
+    this.$dispatch(actions.changeStyles(styles));
+  }
+
+  async resizeTable(event) {
+    try {
+      const data = await resizeHandler(this.root, event);
+      this.$dispatch(actions.tableResize(data));
+    } catch (e) {
+      console.warn("Resize error", e.message);
+    }
   }
 
   onMousedown(event) {
     if (shouldResize(event)) {
-      resizeHandler(this.root, event);
+      this.resizeTable(event);
     } else if (isCell(event)) {
       const target = $(event.target);
 
@@ -61,7 +86,7 @@ export class Table extends ExcelComponent {
 
         this.selection.selectGroup(selectedCells);
       } else {
-        this.selection.select(target);
+        this.selectCell(target);
       }
     }
   }
@@ -86,7 +111,16 @@ export class Table extends ExcelComponent {
     }
   }
 
+  updateTextInStore(value) {
+    this.$dispatch(
+      actions.changeText({
+        id: this.selection.current.id(),
+        value,
+      })
+    );
+  }
+
   onInput(event) {
-    this.$emit("table:input", $(event.target));
+    this.updateTextInStore($(event.target).text());
   }
 }

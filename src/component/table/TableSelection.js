@@ -20,10 +20,18 @@ export class TableSelection {
     this.group = [];
   }
 
+  get selectedIds() {
+    return this.group.map((el) => el.id());
+  }
+
   selectGroup(group) {
     this.clear();
 
     this.group = group;
     this.group.forEach((cell) => cell.addClass(TableSelection.className));
+  }
+
+  applyStyle(style) {
+    this.group.forEach((cell) => cell.css(style));
   }
 }
