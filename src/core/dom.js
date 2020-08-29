@@ -17,7 +17,7 @@ class Dom {
   }
 
   text(text) {
-    if (typeof text === "string") {
+    if (typeof text !== "undefined") {
       this.$element.textContent = text;
       return this;
     }
@@ -111,6 +111,15 @@ class Dom {
   removeClass(className) {
     this.$element.classList.remove(className);
     return this;
+  }
+
+  attr(name, value) {
+    if (value) {
+      this.$element.setAttribute(name, value);
+      return this;
+    }
+
+    return this.$element.getAttribute(name);
   }
 
   focus() {
